@@ -34,14 +34,15 @@ public class Activity {
 
             if (jsonArray.size() > 0) {
 
-                JsonObject firstEvent = jsonArray.get(0).getAsJsonObject();
-                JsonObject actor = firstEvent.getAsJsonObject("actor");
+                JsonObject event = jsonArray.get(0).getAsJsonObject();
+                JsonObject actor = event.getAsJsonObject("actor");
                 String login = actor.get("login").getAsString();
-                JsonObject secondEvent = jsonArray.get(0).getAsJsonObject();
-                JsonObject repo = secondEvent.getAsJsonObject("repo");
+                JsonObject repo = event.getAsJsonObject("repo");
                 String repo_url = repo.get("name").getAsString();
+                String date = event.get("created_at").getAsString();
                 data.setLogin(login);
                 data.setURL(repo_url);
+                data.setDate(date);
 
             } else {
                 System.out.println("No events found for user: " + name);

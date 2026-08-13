@@ -4,9 +4,10 @@ public class ActivityData {
 
     private String login;
     private String repo_url;
+    private String date;
 
     public void showData(){
-        System.out.println("A ultima acao do usuario: " + login + " foi no repositorio: " + repo_url);
+        System.out.println("The last activity from user: " + login + " was at repository: " + repo_url + " at "+ date);
     }
 
     public void setLogin(String login){
@@ -15,5 +16,9 @@ public class ActivityData {
 
     public void setURL(String url){
         this.repo_url = url;
+    }
+
+    public void setDate(String date){
+        this.date = date;
     }
 }
