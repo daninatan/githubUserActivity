@@ -5,12 +5,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
 public class Activity {
 
+    ActivityData data;
+
+    Activity(){
+        data = new ActivityData();
+    }
 
     public void getActivity(String name){
         final String url_chamada = "https://api.github.com/users/" + name + "/events";
@@ -23,13 +29,31 @@ public class Activity {
             }
 
             BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
-            String teste = jsonObject.getAsJsonObject("actor").get("login").getAsString();
-            System.out.println(teste);
+            JsonArray jsonArray = JsonParser.parseReader(response).getAsJsonArray();
+
+
+            if (jsonArray.size() > 0) {
+
+                JsonObject firstEvent = jsonArray.get(0).getAsJsonObject();
+                JsonObject actor = firstEvent.getAsJsonObject("actor");
+                String login = actor.get("login").getAsString();
+                JsonObject secondEvent = jsonArray.get(0).getAsJsonObject();
+                JsonObject repo = secondEvent.getAsJsonObject("repo");
+                String repo_url = repo.get("name").getAsString();
+                data.setLogin(login);
+                data.setURL(repo_url);
+
+            } else {
+                System.out.println("No events found for user: " + name);
+            }
 
         } catch (Exception e) {
             System.err.println(e);
         }
+    }
+
+    public void showActivity(){
+        data.showData();
     }
 
     private String convertJsonToString(BufferedReader buffereReader) throws IOException {
